@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> axios demo</title>
+  <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+    <script src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+</head>
+<body>
+  <p id="time"></p>
+  <script>
+    window.onload = function(){
+      // axios.post('http://localhost:3000/register',{
+      //   username:'xxl',
+      //   password:'xxl'
+      // }).then(res =>{
+      //   //console.log(res,'login---')
+      // })
+    //  $.ajax({
+    //     url:'http:localhost:3000/register',
+    //     type:'post',
+    //     data:{username:'gzj1',password:'gzj1'},
+    //     suceess:function(res){
+    //       console.log(res)
+    //     },error:function(err){
+    //       console.log(err)
+    //     }
+    //    })
+     $.ajax({
+        type: 'HEAD', // 获取头信息，type=HEAD即可
+        url : "http:localhost:3000/register",
+        data:{username:'gzj1',password:'gzj1'},
+        complete: function( xhr,data ){
+            // 获取相关Http Response header
+            var wpoInfo = {
+                // 服务器端时间
+                "date" : xhr.getResponseHeader('Date'),
+                // 如果开启了gzip，会返回这个东西
+                "contentEncoding" : xhr.getResponseHeader('Content-Encoding'),
+                // keep-alive ？ close？
+                "connection" : xhr.getResponseHeader('Connection'),
+                // 响应长度
+                "contentLength" : xhr.getResponseHeader('content-length'),
+                // 服务器类型，apache？lighttpd？
+                "server" : xhr.getResponseHeader('Server'),
+                "vary" : xhr.getResponseHeader('Vary'),
+                "transferEncoding" : xhr.getResponseHeader('Transfer-Encoding'),
+                // text/html ? text/xml?
+                "contentType" : xhr.getResponseHeader('Content-Type'),
+                "cacheControl" : xhr.getResponseHeader('Cache-Control'),
+                // 生命周期？
+                "exprires" : xhr.getResponseHeader('Exprires'),
+                "lastModified" : xhr.getResponseHeader('Last-Modified')
+            };
+            console.log(wpoInfo,'----');
+        }
+    });
+    }
+    function createXHR(){ 
+      if(typeof XMLHttpRequest != "undefined"){ 
+        return new XMLHttpRequest(); 
+      } else if(typeof ActiveXObject != "undefined"){ 
+        return createIEXHR(); 
+      } else{
+       throw new Error("没有可用的XHR对象"); 
+      } 
+    }
+    function createIEXHR(){ //适用于IE7以前的版本
+      if(typeof arguments.callee.activeXString != "string"){ 
+        var versions = ["MSXML2.XMLHttp.6.0","MSXML2.XMLHttp.3.0","MSXML2.XMLHttp"]; 
+        var i,len; 
+        for(i=0,len = versions.length;i < len;i++){ 
+          try{
+            new ActiveXObject(versions[i]); 
+            arguments.callee.activeXString = versions[i]; break; 
+          }catch (ex){ } 
+        } 
+      } 
+      return new ActiveXObject(arguments.callee.activeXString);
+    }
+
+    function xhrPOST(url,data,callback){
+      var xhr = createXHR(); 
+      var dataStr = ""; 
+      xhr.open("POST", url, true); 
+      xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded"); 
+      for(key in data){ 
+        dataStr += key + "=" + data[key]; 
+      } 
+      xhr.send(dataStr); 
+      xhr.timeout = "8000";//IE8+
+      xhr.onreadystatechange = function(){ 
+        console.log(xhr)
+        var XMLHttpReq = xhr; 
+        if(XMLHttpReq.readyState==2){
+          console.log(xhr.getResponseHeader("Date"),'---');
+        }
+        if (XMLHttpReq.readyState == 4) { 
+          if (XMLHttpReq.status >= 200 && xhr.status < 300 || xhr.status == 304) { 
+            console.log(xhr.getResponseHeader("Date"));
+            //callback(JSON.parse(XMLHttpReq.responseText)); 
+            //xhr = XMLHttpReq = null; 
+          }else{ 
+            alert("服务器出小差了"); 
+          } 
+        } 
+      }; 
+      xhr.ontimeout = function(){ timeout(); } 
+    } 
+    function xhrGET(url,data,callback){ 
+      var xhr = createXHR(); 
+      url += "?"; 
+      for(key in data){ 
+        url += key + "=" + data[key] + "&"; 
+      } 
+      url = url.slice(0,-1); 
+      xhr.open("get", url, true); 
+      xhr.send(null); xhr.timeout = "8000";//IE8+
+      xhr.onreadystatechange = function(){ 
+        var XMLHttpReq = xhr; 
+        if (XMLHttpReq.readyState == 4) { 
+          if (XMLHttpReq.status >= 200 && xhr.status < 300 || xhr.status == 304) {
+            callback(JSON.parse(XMLHttpReq.responseText)); 
+            xhr = XMLHttpReq = null; 
+          }else{ 
+            alert("服务器出小差了"); 
+          } 
+        } 
+      }; 
+      xhr.ontimeout = function(){ timeout(); } 
+    } 
+    function timeout(){ alert("连接超时"); }
+
+    // xhrPOST("http://localhost:3000/register",{username:'gzj',password:'gzj'})
+
+    function ajax(data){
+      var xhr = null;
+      var dataStr = ""; 
+      if(window.XMLHttpRequest){
+        xhr = new window.XMLHttpRequest();
+      }else{ // ie
+        xhr = new ActiveObject("Microsoft")
+      }
+      // 通过get的方式请求当前文件
+      xhr.open("post","http://localhost:3000/register");
+      for(key in data){ 
+        dataStr += key + "=" + data[key]; 
+      } 
+      xhr.send(dataStr); 
+      // xhr.send(null);
+      // 监听请求状态变化
+      xhr.onreadystatechange = function(){
+        var time = null,
+            curDate = null;
+        if(xhr.readyState===2){
+          // 获取响应头里的时间戳
+          time = xhr.getResponseHeader("Date");
+          console.log(time)
+          curDate = new Date(time);
+          document.getElementById("time").innerHTML = "服务器时间是："+curDate.getFullYear()+"-"+(curDate.getMonth()+1)+"-"+curDate.getDate()+" "+curDate.getHours()+":"+curDate.getMinutes()+":"+curDate.getSeconds();
+        }
+      }
+   }
+
+   // ajax({username:'gzj1',password:'gzj1'});
+
+  </script>
+</body>
+</html>

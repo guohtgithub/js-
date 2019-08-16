@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin: 0;
+			padding:0;
+		}
+		div{
+			width: 100px;
+			height: 50px;
+			font-size: 12px;
+			background: #676767;
+			line-height: 50px;
+		}
+		span{
+			float: left;
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<span>块元素</span>
+		<h2>行标题</h2>
+	</div>
+</body>
+<script>
+	function Publicher(){
+		this.observers = [];
+		let state = '';
+		this.getState = function(){
+			return state;
+		}
+		this.setState = function(value){
+			state = value;
+			this.notice()
+		}
+	}
+	Publicher.prototype.addOb = function(observer){
+		let flag = false;
+		for(let i=this.observers.length-1;i>=0;i--){
+			if(this.observers[i] = observer){
+				flag = true;
+			}
+		}
+		if(!flag){
+			this.observers.push(observer);
+		}
+		return this;
+	}
+</script>
+</html>

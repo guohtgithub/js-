@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="https://echarts.baidu.com/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <button id="getData">添加数据</button>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var data = [{
+            fixed: true,
+            x: myChart.getWidth() / 2,
+            y: myChart.getHeight() / 2,
+            symbolSize: 20,
+            id: '-1'
+        }];
+
+        var edges = [];
+
+        var option = {
+            series: [{
+                type: 'graph',
+                layout: 'force',
+                animation: false,
+                data: data,
+                force: {
+                    repulsion: 100,
+                    edgeLength: 5
+                },
+                edges: edges
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+        var btn = document.getElementById('getData');
+        myChart.on('click',function(param) {
+            data.push({
+                id: data.length
+            });
+            var source = Math.round((data.length - 1) * Math.random());
+            var target = Math.round((data.length - 1) * Math.random());
+            if (source !== target) {
+                edges.push({
+                    source: source,
+                    target: target
+                });
+            }
+
+            myChart.setOption({
+                series: [{
+                    roam: true,
+                    data: data,
+                    edges: edges
+                }]
+            });
+        });
+    </script>
+</body>
+</html>

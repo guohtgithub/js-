@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>element ui scrollBar</title>
+  <script src="http://unpkg.com/vue/dist/vue.js"></script>
+  <script src="http://unpkg.com/element-ui@2.3.9/lib/index.js"></script>
+  <style> 
+    @import url("http://unpkg.com/element-ui@2.3.9/lib/theme-chalk/index.css");
+    #app{
+      display: flex;
+    }
+    .scroll1 {
+      height: 300px;
+      overflow: hidden;
+      width: 300px;
+      background: #9abfa2;
+      margin-right: 10px;
+    }
+    .list {
+      max-height: 200px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="scroll1">
+    <h2>list:</h2>
+    <el-scrollbar 
+      wrap-class="list" 
+      wrap-style="color: red;" 
+      view-style="font-weight: bold;" 
+      view-class="view-box" :native="false"
+    >
+      <div v-for="value in num" :key="vlaue">
+        {{value}}
+      </div>
+    </el-scrollbar>
+  </div>
+  <div class="scroll1">
+    <h2>list:</h2>
+    <el-scrollbar 
+      wrap-class="list" 
+      wrap-style="color: red;" 
+      view-style="font-weight: bold;" 
+      view-class="view-box" :native="false"
+    >
+      <div v-for="value in num" :key="vlaue">
+        {{value}}
+      </div>
+    </el-scrollbar>
+  </div>
+</div>
+</body>
+<script>
+   
+new Vue({
+  el: "#app",
+  data: {
+    num: 30
+  }
+})
+</script>
+</html>
