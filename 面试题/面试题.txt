@@ -1,0 +1,70 @@
+Set
+成员唯一、无序且不重复
+[value, value]，键值与键名是一致的（或者说只有键值，没有键名）
+可以遍历，方法有：add、delete、has
+
+WeakSet
+成员都是对象
+成员都是弱引用，可以被垃圾回收机制回收，可以用来保存DOM节点，不容易造成内存泄漏
+不能遍历，方法有add、delete、has
+
+Map
+本质上是键值对的集合，类似集合
+可以遍历，方法很多可以跟各种数据格式转换
+
+WeakMap
+只接受对象作为键名（null除外），不接受其他类型的值作为键名
+键名是弱引用，键值可以是任意的，键名所指向的对象可以被垃圾回收，此时键名是无效的
+不能遍历，方法有get、set、has、delete
+
+其中settimeout的回调函数放到宏任务队列里，等到执行栈清空以后执行； promise.then里的回调函数会放到相应宏任务的微任务队列里，等宏任务里面的同步代码执行完再执行；async函数表示函数里面可能会有异步方法，await后面跟一个表达式，async方法执行时，遇到await会立即执行表达式，然后把表达式后面的代码放到微任务队列里，让出执行栈让同步代码先执行。
+
+async await 用于把异步请求变为同步请求的方式,第一个请求的返回值作为后面一个请求的参数,其中每一个参数都是一个promise对象
+
+(async () => {
+    var a = await A();
+    var b = await B(a);
+    var c = await C(b);
+    var d = await D(c);
+})();
+
+Promise.resolve().then(() => {
+    console.log(1111)
+}).then(() => {
+    console.log(2222)
+}).then(() => {
+    console.log(3333)
+})
+ //  111, 222,333
+
+
+ async function async1() {
+    console.log('async1 start');
+    await async2();
+    console.log('async1 end');
+}
+async function async2() {
+    console.log('async2');
+}
+console.log('script start');
+setTimeout(function() {
+    console.log('setTimeout');
+}, 0)
+async1();
+new Promise(function(resolve) {
+    console.log('promise1');
+    resolve();
+}).then(function() {
+    console.log('promise2');
+});
+console.log('script end');
+
+
+// script start
+// async1 start
+// async2
+// promise1
+// script end 
+// async1 end
+// promise2
+// setTimeout

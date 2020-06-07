@@ -1,0 +1,67 @@
+1、下面是最简单的的一个package.json 文件（只有两个数据，项目名称和项目版本，他们都是必须的，如果没有就无法install）
+
+{
+  "name":"vue-demo",
+  "version":"1.0.0"
+}
+
+2、scripts
+指定了运行脚本命令的npm命令行缩写，比如start指定了运行npm run start时，所要执行的命令。
+
+"scripts": {
+  "dev": "node build/dev-server.js",
+  "build": "node build/build.js",
+  "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
+  "test": "npm run unit",
+  "lint": "eslint --ext .js,.vue src test/unit/specs"
+},
+
+3、dependencies，devDependencies
+dependencies和devDependencies两项，分别指定了项目运行所依赖的模块、项目开发所需要的模块。它们都指向一个对象，该对象的各个成员，分别由模块名和对应的版本要去组成，表示依赖的模块及其版本范围
+
+{
+  "name": "Hello World",
+  "version": "0.0.1",
+  "author": "张三",
+  "private": true,      // 如果设置为true,npm拒绝发布这个包;
+  "description": "第一个node.js程序",
+  "keywords":["node.js","javascript"],
+  "repository": {         // 项目代码存放地方
+      "type": "git",
+      "url": "https://path/to/url"
+  },
+  "man": "./sss",    //指定一个单一的文件名或一个文件名数组。意思类似于linux命令中的man 命令，来查看一个命令的用法 
+  "license":"MIT",
+  "engines": {"node": "0.10.x"},       // 指明了该模块运行的平台 node哪个版本,或某个浏览器
+  "bugs":{"url":"http://path/to/bug","email":"bug@example.com"},
+  "contributors":[{"name":"李四","email":"lisi@example.com"}],
+  "config": {
+      "port" : "8080"    //添加命令行的环境变量
+  }
+  "main": "./index.js"   // 指定require命令加载的入口文件;
+  "bin": {
+      "someTool": "./bin/someTool.js"   // 将 ./bin/someTool.js利用软链接挂载到someTool上,可在scripts里使用诸如   "someTool":"someTool"来执行 ./bin/someTool.js
+  },
+  "scripts": {
+      "prepublish": "",   // 在包发布之前运行，也会在npm install安装到本地时运行
+      "publish": "",      // 包被发布之后运行,
+      "preinstall": "",   // 包被安装前运行,
+      "install": "",      // 包被安装后运行,
+      "preuninstall": "",  // 包被卸载前运行,
+      "postuninstall": "", // 包被卸载后运行,
+      "text": "",      // npm test命令时允许
+      "start": "node index.js"      // 允许通过npm start 允许 node index.js
+  },
+  "dependencies": {                // 项目运行所依赖的模块
+      "express": "latest",         // 安装最新版本
+      "mongoose": "~3.8.3",              // 安装3.8.3以上的版本，安装时不改变大版本号和次要版本号;
+      "handlebars-runtime": "^1.0.12",   // 安装 安装时不改变大版本号,可改变次要版本号和小版本号
+  },
+  "devDependencies": {              // 项目开发所依赖的模块
+      "bower": "~1.2.8"
+  },
+  "preferGlobal": true,   // 当用户不将该模块安装为全局模块时（即不用–global参数），要不要显示警告
+  "style": [
+      "./node_modules/tipso/src/tipso.css"    // 供浏览器使用时，样式文件所在的位置
+  ]
+}

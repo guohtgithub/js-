@@ -1,0 +1,299 @@
+<!doctype html public "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="utf-8">
+    <head>
+        <title></title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <style>
+            .dragAble {
+                position: relative;
+                cursor: move;
+            }
+
+    
+        </style>
+        <script language="javascript">
+            //放大缩小
+            window.onload = function() {
+                var oImg = document.getElementsByTagName("img")[0];
+
+                function fnWheel(obj, fncc) {
+                    obj.onmousewheel = fn;
+                    if (obj.addEventListener) {
+                        obj.addEventListener('DOMMouseScroll', fn, false);
+                    }
+
+                    function fn(ev) {
+                        var oEvent = ev || window.event;
+                        var down = true;
+
+                        if (oEvent.detail) {
+                            down = oEvent.detail > 0
+                        } else {
+                            down = oEvent.wheelDelta < 0
+                        }
+
+                        if (fncc) {
+                            fncc.call(this, down, oEvent);
+                        }
+
+                        if (oEvent.preventDefault) {
+                            oEvent.preventDefault();
+                        }
+
+                        return false;
+                    }
+
+
+                };
+                fnWheel(oImg, function(down, oEvent) {
+
+                    var oldWidth = this.offsetWidth;
+                    var oldHeight = this.offsetHeight;
+                    var oldLeft = this.offsetLeft;
+                    var oldTop = this.offsetTop;
+
+                    var scaleX = (oEvent.clientX - oldLeft) / oldWidth; //比例
+                    var scaleY = (oEvent.clientY - oldTop) / oldHeight;
+
+                    if (down) {
+                        this.style.width = this.offsetWidth * 0.9 + "px";
+                        this.style.height = this.offsetHeight * 0.9 + "px";
+                    } else {
+                        this.style.width = this.offsetWidth * 1.1 + "px";
+                        this.style.height = this.offsetHeight * 1.1 + "px";
+                    }
+
+                    var newWidth = this.offsetWidth;
+                    var newHeight = this.offsetHeight;
+
+                    this.style.left = oldLeft - scaleX * (newWidth - oldWidth) + "px";
+                    this.style.top = oldTop - scaleY * (newHeight - oldHeight) + "px";
+                });
+            }
+            <!--
+            //拖拽
+            var ie = document.all;
+            var nn6 = document.getElementByIdx && !document.all;
+            var isdrag = false;
+            var y, x;
+            var oDragObj;
+
+            function moveMouse(e) {
+                if (isdrag) {
+                    oDragObj.style.top = (nn6 ? nTY + e.clientY - y : nTY + event.clientY - y) + "px";
+                    oDragObj.style.left = (nn6 ? nTX + e.clientX - x : nTX + event.clientX - x) + "px";
+                    return false;
+                }
+            }
+
+            function initDrag(e) {
+                var oDragHandle = nn6 ? e.target : event.srcElement;
+                var topElement = "HTML";
+                while (oDragHandle.tagName != topElement && oDragHandle.className != "dragAble") {
+                    oDragHandle = nn6 ? oDragHandle.parentNode : oDragHandle.parentElement;
+                }
+                if (oDragHandle.className == "dragAble") {
+                    isdrag = true;
+                    oDragObj = oDragHandle;
+                    nTY = parseInt(oDragObj.style.top + 0);
+                    y = nn6 ? e.clientY : event.clientY;
+                    nTX = parseInt(oDragObj.style.left + 0);
+                    x = nn6 ? e.clientX : event.clientX;
+                    document.onmousemove = moveMouse;
+                    return false;
+                }
+            }
+            document.onmousedown = initDrag;
+            document.onmouseup = new Function("isdrag=false");
+            //-->
+        </script>
+    </head>
+    <body>
+        
+            <img id="monitor_map" src="http://a2.att.hudong.com/36/48/19300001357258133412489354717.jpg" class="dragAble" style="margin:0;padding: 0" onclick="mapOnClick(event)" />
+            <div class="box">
+  <div class="move">
+    <img
+      onclick="moveBoxClick()"
+      class="small-img"
+      draggable="false"
+      src="https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/103bbf76-6248-421c-a3d6-28a525c459db.png"
+      alt=""
+    />
+    <img
+      onclick="moveBoxClick()"
+      class="magnify-img"
+      draggable="false"
+      src="https://zcy-cdn.oss-cn-shanghai.aliyuncs.com/f2e-assets/90e26f49-9824-4443-b4aa-8aa64a3c8690.png"
+      alt=""
+    />
+    <div class="content"></div>
+  </div>
+</div>
+    </body>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+        $(document).mousemove(function(e) {
+
+    if (!!this.move) {
+
+        var posix = !document.move_target ? {'x': 0, 'y': 0} : document.move_target.posix,
+
+            callback = document.call_down || function() {
+
+                $(this.move_target).css({
+
+                    'top': e.pageY - posix.y,
+
+                    'left': e.pageX - posix.x
+
+                });
+
+            };
+
+ 
+
+        callback.call(this, e, posix);
+
+    }
+
+}).mouseup(function(e) {
+
+    if (!!this.move) {
+
+        var callback = document.call_up || function(){};
+
+        callback.call(this, e);
+
+        $.extend(this, {
+
+            'move': false,
+
+            'move_target': null,
+
+            'call_down': false,
+
+            'call_up': false
+
+        });
+
+    }
+
+});
+        function mapOnClick(e) {
+            e = e || window.event;
+            var imgId = '#' + $(e.target).attr('id');
+            var currentWidth = $(imgId).width();
+            var currentHeight = $(imgId).height();
+            var offsetX = e.pageX - $(imgId).offset().left;
+            var offsetY = e.pageY - $(imgId).offset().top;
+            var x = offsetX / currentWidth;
+            var y = offsetY / currentHeight;
+            alert(x + ':' + y)
+        }
+        const moveBox = document.querySelector(".move");
+const smallImg = document.querySelector(".move .small-img");
+const magnifyImg = document.querySelector(".move .magnify-img");
+var initX = 0; // 记录小采宝的x坐标
+var initY = 0; // 记录小采宝的y坐标
+let isMove = false; // 是否是拖动
+let isBig = false; // 是否是变大的盒子
+
+smallImg.onmousedown = magnifyImg.onmousedown = function(evt) {
+      // 拖动div盒子
+  const clientX = evt.clientX;
+  const clientY = evt.clientY;
+  const pageX = moveBox.offsetLeft;
+  const pageY = moveBox.offsetTop;
+  const x = clientX - pageX;
+  const y = clientY - pageY;
+
+  isMove = false;
+
+  document.onmousemove = function(e) {
+    const boxWidth = moveBox.offsetWidth;
+    const boxHeight = moveBox.offsetHeight;
+    let _x = e.clientX - x;
+    let _y = e.clientY - y;
+    if (_x < 0) {
+      _x = 0;
+    }
+    if (_x > window.screen.width - boxWidth) {
+      _x = window.screen.width - boxWidth;
+    }
+    if (_y < 0) {
+      _y = 0;
+    }
+    if (_y > document.documentElement.clientHeight - boxHeight) {
+      _y = document.documentElement.clientHeight - boxHeight;
+    }
+
+    if (isBig) {
+      initX = _x;
+      initY = _y;
+    }
+
+    moveBox.style.left = _x + "px";
+    moveBox.style.top = _y + "px";
+
+    isMove = true;
+  };
+};
+
+
+document.onmouseup = function() {
+  if (isMove) {
+    initX = moveBox.offsetLeft;
+    initY = moveBox.offsetTop;
+  }
+  document.onmousemove = null;
+};
+
+function moveBoxClick(e) {
+  const target = document.querySelector(".move");
+  const smallImg = document.querySelector(".small-img");
+  const magnifyImg = document.querySelector(".magnify-img");
+  // 点击move盒子
+  if (!isMove) {
+    if (isBig) {
+      smallImg.style.display = "block";
+      magnifyImg.style.display = "none";
+      target.style.width = "32px";
+      target.style.left = initX + 'px';
+      target.style.top = initY + 'px';
+    } else {
+      smallImg.style.display = "none";
+      magnifyImg.style.display = "block";
+      target.style.width = "130px";
+    }
+    isBig = !isBig;
+
+    setTimeout(() => {
+      autoPotion();
+    }, 100)
+  }
+}
+
+// 点击时，判断采宝是否超出显示屏
+function autoPotion () {
+  let x = moveBox.offsetLeft;
+  let y = moveBox.offsetTop;
+
+  if (x < 0) {
+    x = 0;
+  } else if (x > document.documentElement.clientWidth - moveBox.offsetWidth) {
+    x = document.documentElement.clientWidth - moveBox.offsetWidth;
+  }
+
+  if (y < 0) {
+    y = 0;
+  } else if (y > document.documentElement.clientHeight - moveBox.offsetHeight) {
+    y = document.documentElement.clientHeight - moveBox.offsetHeight;
+  }
+
+  moveBox.style.left = x + "px";
+  moveBox.style.top = y + "px";
+}
+    </script>
+
+</html>

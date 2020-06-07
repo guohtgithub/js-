@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    name:{{name}}
+    <br />
+    <input type='text' v-model='name' />
+  </div>
+  <div id="app1">
+    <input type="text" id="model">
+    <br>
+    <div id="modelText"></div>
+  </div>
+</body>
+<script>
+  const el = document.getElementById('app')
+  const template = el.innerHTML
+
+  const _data = {
+    name:'guoht'
+  }
+
+  let changeName = new Proxy(_data,{
+    set(obj,name,value){
+      obj[name] = value
+      render()
+    }
+  })
+
+  render()
+  
+  function render(){
+    el.innerHTML = template.replace(/\{\{\w+\}\}/g,str => {
+      str = str.substring(2,str.length-2)
+      return _data[str]
+    })
+
+    Array.from(el.getElementsByTagName('input')).filter(ele =>{
+      return ele.getAttribute('v-model')
+    }).forEach(input =>{
+      let name = input.getAttribute('v-model')
+      input.value = changeName[name]
+      input.oninput = function(){
+        changeName[name] = this.value
+      }
+    })
+  }
+</script>
+<script>
+  var model = document.querySelector('#model')
+  var modelText = document.querySelector('#modelText')
+  var defaultName = 'defaultName'
+  var userInfo = {}
+  model.value = defaultName
+  Object.defineProperty(userInfo,'name',{
+    get:function(){
+      return defaultName
+    },
+    set:function(value){
+      defaultName = value
+      model.value = value
+      console.log(value)
+      modelText.textContent = value
+    }
+  })
+
+  userInfo.name = 'new value'
+  var isEnd = true
+  model.addEventListener('keyup',function(){
+    if(isEnd){
+      userInfo.name = this.value
+    }
+  },false)
+  model.addEventListener('compositionstart',function(){
+    console.log('开始输入。。。')
+    isEnd = false
+  })
+  model.addEventListener('comositionend',function(){
+    isEnd = true
+    console.log('结束输入中文')
+  })
+</script>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>实验</title>
+</head>
+<body>
+    <div class="father">
+        <div class="container">
+            <div class="title">hello world</div>
+            <p class="content">blalblalalalalalalalal</p>
+        </div>
+        
+    </div>
+    <!-- rem是根据html的font-size大小为基准，来定义大小值，在浏览器端最终转换为px值 -->
+    <!-- em是根据当前元素的font-size大小为基准，来定义大小值，在浏览器端最终转换为px值  -->
+</body>
+<style>
+    html{
+        font-size:18px;
+    }
+    .container{
+        width: 80%;  /* 大面积的div采用百分制来计算 */
+        margin:0 auto;
+        font-size:16px;
+        background-color: skyblue;
+    }
+    .title{
+        padding:2rem 0;
+        width: 10rem;  /* 10*18=180px  依照html 的font-size值来计算 */
+        height: 3rem;  /* 3*18=54px  依照html 的font-size值来计算 */
+        background-color: pink;
+    }
+    .content{
+        font-size:14px; 
+        width: 60em;   /* 60*14=840px  不会依照父元素container的font-size值来计算 */
+        height: 3em;    /* 3*14=42px  不会依照父元素container的font-size值来计算 */
+    }
+</style>
+</html>

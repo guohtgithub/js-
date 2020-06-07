@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>幻灯片效果</title>
+  <style>
+    .ppt-wrapper{
+      width: 60%;
+      min-height: 300px;
+      margin: 10px auto;
+      border: 1px solid lightblue;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-container{
+        min-height: 300px;
+        background: lightcoral;
+        position: absolute;
+        transition: all .5s ease-out;
+    }
+
+    .slider{
+      width: 100%;
+      color: #ffffff;
+      font-size: 24px;
+      display: none;
+      transition: all .5s ease-out;
+    }
+
+    .active{
+      display: inline-block;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.9.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+  <div id="app" class="app"></div>
+</body>
+<script>
+  const PPT = ({sliders = []}) => {
+    const [activeSlide, setActiveSlide] = React.useState(0);  
+      
+    switchSlide = () => {
+      setActiveSlide((activeSlide + 1) % sliders.length );
+    }
+    
+    setTimeout(switchSlide, 1500);
+    
+    return (
+      <div className="ppt-wrapper">
+        <div 
+          className="slide-container" 
+          style={{width: sliders.length === 0 ? '100%' : `${sliders.length * 100}%`}}>
+          {
+            sliders.map((slider, index) => (
+              <div 
+                className={`slider ${index === activeSlide ? 'active' : ''}`}
+                key={index}>
+                {slider}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    )
+  }
+
+
+  const App = () => {
+    const sliders=[
+      <div>This is Page1</div>,
+      <div>This is Page2</div>,
+      <div>This is Page3</div>
+    ]
+    
+    return (
+      <div>
+        <PPT sliders={sliders}/>
+      </div>
+    )
+  }
+
+  ReactDOM.render(<App />, document.getElementById('app'));
+</script>
+</html>

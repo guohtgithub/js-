@@ -1,0 +1,120 @@
+1、1px 线
+  .box::after{ content: ""; display: block; width: 100px; height: 1px; background-color: black; }
+  border-bottom : 1px solid black;
+
+2、单行显示
+.single-text{
+  width: 500px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  background: lightblue;
+  display: box;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+ }
+
+ 3、多行显示
+.multi-text{
+  width: 50%;
+  height: 4.5rem;
+  line-height: 1.5;
+  padding: 20px;
+  background: lightblue;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  
+  &::after{
+    content: '...';
+    height: 1.5rem;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+  }
+ }
+
+ 3、图文不能复制
+ -webkit-user-select: none;
+-ms-user-select: none;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+
+4、英文首字符大写
+text-transform: capitalize;
+
+5、Sticky Footer，完美的绝对底部
+<div class="wrapper">
+  <div class="content"><!-- 页面主体内容区域 --></div>
+  <div class="footer"><!-- 需要做到 Sticky Footer 效果的页脚 --></div>
+</div>
+5.1）absolute
+html, body {
+  height: 100%;
+}
+.wrapper {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+}
+
+5.2) calc
+.content {
+  min-height: calc(100vh - 50px);
+}
+.footer {
+  height: 50px;
+}
+
+5.3) table
+html, body {
+  height: 100%;
+}
+.wrapper {
+  display: table;
+  width: 100%;
+  min-height: 100%;
+}
+.content {
+  display: table-row;
+  height: 100%;
+}
+
+5.4) Flexbox
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  flex: 1;
+}
+
+6、间隔是由于代码中的回车换行（空白节点）引起的
+<style>
+  .wrap>span {
+    background: red;
+  }
+</style>
+<div class="wrap">
+  <span>hello</span>
+  <span>world</span>
+</div>
+上面代码中的span可以明显地看到有间隔，解这几种决办法：
+
+去掉换行，将 span 写成一行 <span>hello</span><span>world</span>
+父元素使用 flex 布局：.wrap {display: flex; flex-direction: row;}
+父元素设置 font-size: 0;，span 子元素再设置字体大小 font-size: 16px;
+span 子元素设置 float: left

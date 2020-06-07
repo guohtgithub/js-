@@ -1,0 +1,18 @@
+
+//绝对布局
+.parent{
+  position:relative;
+}
+.child{
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+// flexbox
+.parent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
